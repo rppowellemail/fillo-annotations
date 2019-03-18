@@ -44,4 +44,20 @@ public class FilloAnnotationsTestWorkbook001Example {
         recordset.close();
         connection.close();
     }
+
+    @Test
+    public void testFilloTestSheetTwo() throws FilloException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        String xlsxFilename = "src/test/resources/TestWorkbook001.xlsx";
+        System.out.println("xlsx=" + xlsxFilename);
+
+        Fillo fillo=new Fillo();
+        Connection connection=fillo.getConnection(xlsxFilename);
+        Recordset recordset=connection.executeQuery("Select * From TestSheetOne");
+        while(recordset.next()) {
+            FilloAnnotationsTestWorkbook001Example annotatedFilloTestSheetOne = FilloAnnotationsFactory.extractFirstClassFromRecordset(recordset, FilloAnnotationsTestWorkbook001Example.class);
+            System.out.println(annotatedFilloTestSheetOne.toString());
+        }
+        recordset.close();
+        connection.close();
+    }
 }
