@@ -33,7 +33,20 @@ The following example shows annotating the class and extracting the spreadsheet:
     
     }
 
-Extracting the class from Fillo recordset:
+Extracting list of annotated class from Fillo recordset:
+
+    ...
+        Fillo fillo=new Fillo();
+        Connection connection=fillo.getConnection(xlsxFilename);
+        Recordset recordset=connection.executeQuery("Select * From HorizontalData");
+        
+        List<HorizontalDataEntry> entries = FilloAnnotationsFactory.extractClassesFromRecordset(recordset, HorizontalDataEntry.class);
+        
+        recordset.close();
+        connection.close();
+    ...
+
+Iterating over recordset:
 
     ...
         Fillo fillo=new Fillo();
@@ -45,8 +58,8 @@ Extracting the class from Fillo recordset:
         }
         recordset.close();
         connection.close();
+        
     ...
-
 
 Values are set in the created class:
 
@@ -59,4 +72,3 @@ Values are set in the created class:
 # Dependencies / References
 
  * Fillo ( https://codoid.com/fillo/ )
-

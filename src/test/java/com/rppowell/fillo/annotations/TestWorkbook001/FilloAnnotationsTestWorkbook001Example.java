@@ -6,9 +6,13 @@ import com.codoid.products.fillo.Fillo;
 import com.codoid.products.fillo.Recordset;
 import com.rppowell.fillo.annotations.FilloAnnotationsFactory;
 import com.rppowell.fillo.annotations.FilloColumn;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class FilloAnnotationsTestWorkbook001Example {
     @FilloColumn
@@ -33,33 +37,51 @@ public class FilloAnnotationsTestWorkbook001Example {
 
     @Test
     public void testFilloTestSheetOne() throws FilloException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        List<String> expectedValues = Arrays.asList(
+                "FilloAnnotationsTestWorkbook001Example(TestSheetOneColumnOne='valueone', TestSheetOneColumnTwo='foo', TestSheetOneColumnThree='1', TestSheetOneColumnFour='true')",
+                "FilloAnnotationsTestWorkbook001Example(TestSheetOneColumnOne='valuetwo', TestSheetOneColumnTwo='bar', TestSheetOneColumnThree='2', TestSheetOneColumnFour='false')"
+        );
+        List<String> actualValues = new ArrayList<>();
         String xlsxFilename = "src/test/resources/TestWorkbook001.xlsx";
         System.out.println("xlsx=" + xlsxFilename);
 
         Fillo fillo=new Fillo();
         Connection connection=fillo.getConnection(xlsxFilename);
         Recordset recordset=connection.executeQuery("Select * From TestSheetOne");
+        FilloAnnotationsTestWorkbook001Example annotatedFilloTestSheetOne;
         while(recordset.next()) {
-            FilloAnnotationsTestWorkbook001Example annotatedFilloTestSheetOne = (FilloAnnotationsTestWorkbook001Example) FilloAnnotationsFactory.extract(recordset, FilloAnnotationsTestWorkbook001Example.class);
+            annotatedFilloTestSheetOne = FilloAnnotationsFactory.extractFirstClassFromRecordset(recordset, FilloAnnotationsTestWorkbook001Example.class);
             System.out.println(annotatedFilloTestSheetOne.toString());
+            actualValues.add(annotatedFilloTestSheetOne.toString());
         }
         recordset.close();
         connection.close();
+        Assert.assertEquals(actualValues, expectedValues, "extracted entries match");
     }
 
     @Test
     public void testFilloTestSheetTwo() throws FilloException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        List<String> expectedValues = Arrays.asList(
+                "FilloAnnotationsTestWorkbook001Example(TestSheetOneColumnOne='valueone', TestSheetOneColumnTwo='foo', TestSheetOneColumnThree='1', TestSheetOneColumnFour='true')",
+                "FilloAnnotationsTestWorkbook001Example(TestSheetOneColumnOne='valuetwo', TestSheetOneColumnTwo='bar', TestSheetOneColumnThree='2', TestSheetOneColumnFour='false')"
+        );
+        List<String> actualValues = new ArrayList<>();
         String xlsxFilename = "src/test/resources/TestWorkbook001.xlsx";
         System.out.println("xlsx=" + xlsxFilename);
 
         Fillo fillo=new Fillo();
         Connection connection=fillo.getConnection(xlsxFilename);
         Recordset recordset=connection.executeQuery("Select * From TestSheetOne");
-        while(recordset.next()) {
-            FilloAnnotationsTestWorkbook001Example annotatedFilloTestSheetOne = FilloAnnotationsFactory.extractFirstClassFromRecordset(recordset, FilloAnnotationsTestWorkbook001Example.class);
-            System.out.println(annotatedFilloTestSheetOne.toString());
+        FilloAnnotationsTestWorkbook001Example annotatedFilloTestSheetOne;
+
+        List<FilloAnnotationsTestWorkbook001Example> entries = FilloAnnotationsFactory.extractClassesFromRecordset(recordset, FilloAnnotationsTestWorkbook001Example.class);
+
+        for (int i = 0; i < entries.size(); i++) {
+            System.out.println(entries.get(i).toString());
+            actualValues.add(entries.get(i).toString());
         }
         recordset.close();
         connection.close();
+        Assert.assertEquals(actualValues, expectedValues, "extracted entries match");
     }
 }
