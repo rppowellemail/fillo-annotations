@@ -58,6 +58,18 @@ public class FilloAnnotationsFactory {
         return object;
     }
 
+    public static <T> List<T> extractClassesFromRecordset(Recordset recordset, Class<T> annotatedClass) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, FilloException {
+        List<T> list = new ArrayList<>();
+        Class<?> c = Class.forName(annotatedClass.getName());
+        Constructor<?> cons = c.getConstructor();
+        Object object = cons.newInstance();
+        while(recordset.next()) {
+            object = extractObjectFromRecordset(recordset, annotatedClass);
+            list.add((T)object);
+        }
+        return list;
+    }
+
     public static <T> T extractFirstClassFromRecordset(Recordset recordset, Class<T> annotatedClass) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, FilloException {
         Class<?> c = Class.forName(annotatedClass.getName());
         Constructor<?> cons = c.getConstructor();
@@ -67,11 +79,9 @@ public class FilloAnnotationsFactory {
         return (T)object;
     }
 
+    @Deprecated
     public static Object extract(Recordset recordset, Class annotatedClass) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, FilloException {
         Class<?> c = Class.forName(annotatedClass.getName());
-        //System.out.println("annotatedClass getName('" + c.getName() + "')");
-        //System.out.println("annotatedClass getCanonicalName('" + c.getCanonicalName() + "')");
-        //System.out.println("annotatedClass getSimpleName('" + c.getSimpleName() + "')");
         Constructor<?> cons = c.getConstructor();
         Object object = cons.newInstance();
 
