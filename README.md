@@ -40,7 +40,7 @@ Extracting list of annotated class from Fillo recordset:
         Connection connection=fillo.getConnection(xlsxFilename);
         Recordset recordset=connection.executeQuery("Select * From HorizontalData");
         
-        List<HorizontalDataEntry> entries = FilloAnnotationsFactory.extractClassesFromRecordset(recordset, HorizontalDataEntry.class);
+        List<FilloAnnotationsTestSheetOne> entries = FilloAnnotationsFactory.extractClassesFromRecordset(recordset, FilloAnnotationsTestSheetOne.class);
         
         recordset.close();
         connection.close();
@@ -53,12 +53,11 @@ Iterating over recordset:
         Connection connection=fillo.getConnection(xlsxFilename);
         Recordset recordset=connection.executeQuery("Select * From TestSheetOne");
         while(recordset.next()) {
-            FilloAnnotationsTestSheetOne filloAnnotationsTestSheetOne = (FilloAnnotationsTestSheetOne) FilloAnnotationsfactory.extract(recordset, FilloAnnotationsTestSheetOne.class);
+            FilloAnnotationsTestSheetOne filloAnnotationsTestSheetOne = FilloAnnotationsFactory.extractFirstClassFromRecordset(recordset, FilloAnnotationsTestWorkbook001Example.class);
             System.out.println(annotatedFilloTestSheetOne.toString());
         }
         recordset.close();
         connection.close();
-        
     ...
 
 Values are set in the created class:
