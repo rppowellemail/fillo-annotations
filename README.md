@@ -72,5 +72,3 @@ Values are set in the created class:
 # Dependencies / References
 
  * Fillo ( https://codoid.com/fillo/ )
-
-
